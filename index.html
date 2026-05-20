@@ -1,10 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Lensing Playground</title>
+  <title>Lensing Playground</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: radial-gradient(ellipse at center, #0b0f2a 0%, #000000 100%);
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    #title {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 20px;
+      opacity: 0.9;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.8;
+    }
+  </style>
 </head>
+
 <body>
-    <h1>🌌 Lensing Playground</h1>
-    <p>If you can see this, your project is alive.</p>
+  <div id="title">🌌 Lensing Playground — prototype</div>
+
+  <script>
+    // generate starfield
+    for (let i = 0; i < 200; i++) {
+      const star = document.createElement("div");
+      star.className = "star";
+      star.style.left = Math.random() * window.innerWidth + "px";
+      star.style.top = Math.random() * window.innerHeight + "px";
+      star.style.opacity = Math.random();
+      document.body.appendChild(star);
+    }
+  </script>
 </body>
 </html>
