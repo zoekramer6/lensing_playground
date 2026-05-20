@@ -47,6 +47,9 @@
 
 <canvas id="space"></canvas>
 
+
+<script src="physics.js"></script>
+
 <script>
 const canvas = document.getElementById("space");
 const ctx = canvas.getContext("2d");
@@ -75,7 +78,6 @@ let lensX = canvas.width / 2;
 let lensY = canvas.height / 2;
 let dragging = false;
 
-// place lens
 function updateLens() {
   lens.style.left = lensX + "px";
   lens.style.top = lensY + "px";
@@ -94,9 +96,8 @@ window.addEventListener("mousemove", (e) => {
 });
 
 // ----------------------
-// LENSING PHYSICS (simple)
+// PHYSICS INTEGRATION (NEW)
 // ----------------------
-// deflection ~ 1 / r
 const strength = 8000;
 
 function render() {
@@ -107,19 +108,12 @@ function render() {
     let dx = s.x - lensX;
     let dy = s.y - lensY;
 
-    let r2 = dx*dx + dy*dy;
-    let r = Math.sqrt(r2) + 0.0001;
+    // 👇 THIS is where physics.js will eventually plug in
+    let deflection = lensDeflection(dx, dy, strength);
 
-    // gravitational lens deflection (toy model)
-    let factor = strength / r2;
+    let x = s.x + deflection.x;
+    let y = s.y + deflection.y;
 
-    let offsetX = dx * factor;
-    let offsetY = dy * factor;
-
-    let x = s.x + offsetX;
-    let y = s.y + offsetY;
-
-    // draw star
     ctx.fillStyle = "white";
     ctx.fillRect(x, y, 2, 2);
   }
@@ -128,6 +122,7 @@ function render() {
 }
 
 render();
+</script>
 </script>
 
 </body>
