@@ -1,11 +1,8 @@
-function lensDeflection(dx, dy, strength) {
-  let r2 = dx * dx + dy * dy + 100;
+function lensDeflection(dx, dy, b) {
+  let r2 = dx*dx + dy*dy + 100;
   let r = Math.sqrt(r2);
 
-  let factor = strength / (r2 * r);
+  let factor = b / (r2 * r);
 
-  return {
-    x: dx * factor,
-    y: dy * factor
-  };
+  return { x: dx * factor, y: dy * factor };
 }
