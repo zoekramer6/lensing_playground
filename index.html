@@ -42,11 +42,10 @@
 
 <body>
 
-<div id="title">🌌 Lensing Playground — physics v2</div>
+<div id="title">🌌 Lensing Playground</div>
 <div id="lens"></div>
 
 <canvas id="space"></canvas>
-
 
 <script src="physics.js"></script>
 
@@ -57,22 +56,19 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// ----------------------
-// STAR FIELD
-// ----------------------
+// STAR FIELD (now structured data)
 const stars = [];
 const STAR_COUNT = 400;
 
 for (let i = 0; i < STAR_COUNT; i++) {
   stars.push({
     x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height
+    y: Math.random() * canvas.height,
+    brightness: Math.random()
   });
 }
 
-// ----------------------
 // LENS
-// ----------------------
 const lens = document.getElementById("lens");
 let lensX = canvas.width / 2;
 let lensY = canvas.height / 2;
@@ -95,9 +91,7 @@ window.addEventListener("mousemove", (e) => {
   updateLens();
 });
 
-// ----------------------
-// PHYSICS INTEGRATION (NEW)
-// ----------------------
+// RENDER LOOP
 const strength = 8000;
 
 function render() {
@@ -108,21 +102,21 @@ function render() {
     let dx = s.x - lensX;
     let dy = s.y - lensY;
 
-    // 👇 THIS is where physics.js will eventually plug in
     let deflection = lensDeflection(dx, dy, strength);
 
     let x = s.x + deflection.x;
     let y = s.y + deflection.y;
 
+    ctx.globalAlpha = s.brightness;
     ctx.fillStyle = "white";
     ctx.fillRect(x, y, 2, 2);
+    ctx.globalAlpha = 1;
   }
 
   requestAnimationFrame(render);
 }
 
 render();
-</script>
 </script>
 
 </body>
