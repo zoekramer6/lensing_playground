@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>Lensing Lab</title>
   <style>
-    body { margin:0; overflow:hidden; background:black; }
+    body { margin:0; background:black; overflow:hidden; }
     canvas { display:block; }
   </style>
 </head>
@@ -12,15 +12,64 @@
 <body>
 
 <canvas id="c"></canvas>
-<div id="lens"></div>
-
-<script src="physics.js"></script>
-<script src="source.js"></script>
-<script src="renderer.js"></script>
-<script src="lens.js"></script>
 
 <script>
-init();
+const canvas = document.getElementById("c");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// source galaxy
+const source = [];
+
+for (let i = 0; i < 2000; i++) {
+  let x = (Math.random()-0.5)*200;
+  let y = (Math.random()-0.5)*200;
+
+  let r2 = x*x + y*y;
+  let flux = Math.exp(-r2/5000);
+
+  source.push({x,y,flux});
+}
+
+// lens position
+let lensX = canvas.width/2;
+let lensY = canvas.height/2;
+
+window.addEventListener("mousemove", (e) => {
+  if (e.buttons) {
+    lensX = e.clientX;
+    lensY = e.clientY;
+  }
+});
+
+function deflect(dx,dy) {
+  let r2 = dx*dx + dy*dy + 100;
+  let f = 8000/(r2*Math.sqrt(r2));
+  return {x:dx*f, y:dy*f};
+}
+
+function animate() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  for (let p of source) {
+    let dx = p.x - lensX;
+    let dy = p.y - lensY;
+
+    let d = deflect(dx,dy);
+
+    let x = p.x + canvas.width/2 + d.x;
+    let y = p.y + canvas.height/2 + d.y;
+
+    ctx.globalAlpha = p.flux;
+    ctx.fillRect(x,y,2,2);
+  }
+
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(animate);
+}
+
 animate();
 </script>
 
